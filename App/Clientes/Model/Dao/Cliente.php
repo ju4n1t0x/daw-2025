@@ -1,0 +1,2 @@
+<?php
+//modelo de entidad
