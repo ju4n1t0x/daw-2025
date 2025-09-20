@@ -13,4 +13,3 @@ if (isset($_POST['submit'])) {
 
     $authController->login($nombreUsuario, $contrasena);
 }
-
