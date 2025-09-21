@@ -26,8 +26,6 @@ class AuthController {
 
                 $_SESSION['token'] = $token;
 
-                $usn = $token['username'];
-
                 header("Location: Views/welcome.php");
                 exit();
             } else {
