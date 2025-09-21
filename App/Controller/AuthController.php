@@ -18,6 +18,8 @@ class AuthController {
     }
 
     public function login($nombreUsuario, $contrasena) {
+        session_start();
+
         $u = $this->dao->findByUsername($nombreUsuario);
 
         if($u != null) {
@@ -29,8 +31,10 @@ class AuthController {
                 header("Location: Views/welcome.php");
                 exit();
             } else {
-                header("Location: Views/login.php");
+                header("Location: Views/login.php?error=contrasena_incorrecta");
             }
+        } else {
+            header("Location: Views/login.php?error=usuario_no_encontrado");
         }
     }
 
