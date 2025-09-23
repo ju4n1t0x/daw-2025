@@ -38,14 +38,14 @@ const paginationModel = { page: 0, pageSize: 5 };
 
 export default function VentasList() {
   return (
-    <Paper sx={{ height: 400, width: '100%' }}>
+    <Paper sx={{ height: 400, width: '100%', padding: 2}}>
       <DataGrid
         rows={rows}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
         checkboxSelection
-        sx={{ border: 0 }}
+        sx={{ border: 0,}}
       />
     </Paper>
   );

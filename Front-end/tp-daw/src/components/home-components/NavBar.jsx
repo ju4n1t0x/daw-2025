@@ -7,17 +7,22 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Menu from './Menu';
+import {useNavigate} from 'react-router-dom';
 
 
 
 export default function ButtonAppBar() {
-    
+  const navigate = useNavigate();
+  const handleNavigation = (path) =>{
+    navigate(path);
+  }
+
   const [showMenu, setShowMenu] = React.useState(false);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar className="NavBAr" position="static" sx={{
     background: (theme) =>
-      `linear-gradient(to left, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
+      `linear-gradient(to left, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`, height: "70px"
   }}>
     
 
@@ -33,9 +38,9 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+            DawAPP
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" onClick={() => handleNavigation('/')}>Log-Out</Button>
         </Toolbar>
       </AppBar>
       

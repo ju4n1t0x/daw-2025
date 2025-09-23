@@ -3,7 +3,6 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import FormSignIn from './FormSignIn';
 import AvatarLogo from './AvatarLogo';
-import OAuthSignInPage from './OAuthSignInPage';
 import Box from '@mui/material/Box';
 
 
@@ -22,16 +21,14 @@ function SignIn() {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'top',
-        padding: 4,   
+        padding: 2,
+        paddingBottom: 8   
        
     }}>
     
     <AvatarLogo />
     <Divider sx={{margin: 1}}>Sign in</Divider>
     <FormSignIn/>
-    <Divider sx={{margin: 1}}>Or</Divider>
-          <OAuthSignInPage />
-
     </Paper>
     </Box>
     </>
