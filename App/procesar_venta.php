@@ -1,9 +1,8 @@
 <?php
 session_start();
 
-// Usa rutas relativas para el script de procesamiento
-// que ahora está en /App/
-require_once __DIR__ . '/../core/ConexionVenta.php';
+
+require_once __DIR__ . '/../core/databaseconnection.php';
 require_once __DIR__ . '/Service/VentaService.php';
 require_once __DIR__ . '/Model/Venta.php';
 

@@ -4,12 +4,12 @@ namespace App\Service;
 
 require_once __DIR__ . '/IVentaService.php';
 require_once __DIR__ . '/../Dao/VentaDAO.php';
-require_once __DIR__ . '/../../core/conexionVenta.php';
+require_once __DIR__ . '/../../core/databaseconnection.php';
 require_once __DIR__ . '/../Model/Venta.php';
 
 use App\Dao\VentaDAO;
 use App\Model\Venta;
-use core\conexionVenta;
+use core\databaseconnection;
 use PDO;
 use Exception;
 
@@ -21,7 +21,7 @@ class VentaService implements IVentaService
     public function __construct()
     {
         try {
-            $this->dbConnection = conexionVenta::getInstance('db_ventas')->getConnection();
+            $this->dbConnection = databaseconnection::getInstance('db_ventas')->getConnection();
             $this->ventaDAO = new VentaDAO($this->dbConnection);
         } catch (Exception $e) {
             throw new Exception("No se pudo establecer la conexión a la base de datos: " . $e->getMessage());

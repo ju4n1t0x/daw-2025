@@ -51,7 +51,7 @@ if (isset($_SESSION['success_message'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Ventas</title>
+    <title>Registro de Ventas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -176,7 +176,7 @@ if (isset($_SESSION['success_message'])) {
 </head>
 <body>
 <div class="container">
-    <h1>Dashboard de Ventas</h1>
+    <h1>Registro de Ventas</h1>
     <?php if ($message) : ?>
         <div class="message-container <?php echo $isError ? 'error-message' : 'success-message'; ?>">
             <?php echo htmlspecialchars($message); ?>

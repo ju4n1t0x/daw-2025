@@ -2,11 +2,11 @@
 
 namespace App\Dao;
 
-require_once __DIR__ . '/../../core/ConexionVenta.php';
+require_once __DIR__ . '/../../core/Databaseconnection.php';
 require_once __DIR__ . '/../Model/Venta.php';
 
 use App\Model\Venta;
-use core\ConexionVenta;
+use core\DatabaseConnection;
 use PDO;
 
 class VentaDAO {
