@@ -2,55 +2,77 @@
 
 namespace App\Model;
 
-class Usuario {
+class Usuario implements \JsonSerializable
+{
     private ?int $id;
     private $nombreUsuario;
     private $email;
     private $contrasena;
 
-    private $role;
+    private $rol;
 
-    public function __construct(?int $id, $nombreUsuario, $email, $contrasena, string $role = 'user') {
+    public function __construct(?int $id, $nombreUsuario, $email, $contrasena, string $rol = 'user')
+    {
         $this->id = $id;
         $this->nombreUsuario = $nombreUsuario;
         $this->email = $email;
         $this->contrasena = $contrasena;
-        $this->role = $role;
+        $this->rol = $rol;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getNombreUsuario() {
+    public function getNombreUsuario()
+    {
         return $this->nombreUsuario;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function getContrasena() {
+    public function getContrasena()
+    {
         return $this->contrasena;
     }
 
-    public function getRole() {
+    public function getRole()
+    {
         return $this->role;
     }
 
-    public function setNombreUsuario($nombreUsuario) {
+    public function setNombreUsuario($nombreUsuario)
+    {
         $this->nombreUsuario = $nombreUsuario;
     }
 
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->email = $email;
     }
 
-    public function setContrasena($contrasena) {
+    public function setContrasena($contrasena)
+    {
         $this->contrasena = password_hash($contrasena, PASSWORD_DEFAULT);
     }
 
-    public function setRole($role) {
-        $this->rol = $role;
+    public function setRole($rol)
+    {
+        $this->rol = $rol;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'nombreUsuario' => $this->nombreUsuario,
+            'email' => $this->email,
+            'contrasena' => $this->contrasena,
+            'rol' => $this->rol
+        ];
     }
 }

@@ -4,36 +4,32 @@ namespace App\Service;
 
 require_once __DIR__ . '/IVentaService.php';
 require_once __DIR__ . '/../Dao/VentaDAO.php';
-require_once __DIR__ . '/../../core/databaseconnection.php';
-require_once __DIR__ . '/../Model/Venta.php';
+require_once __DIR__ . '/../../core/Databaseconnection.php';
+
 
 use App\Dao\VentaDAO;
-use App\Model\Venta;
-use core\databaseconnection;
-use PDO;
 use Exception;
 
 class VentaService implements IVentaService
 {
     private VentaDAO $ventaDAO;
-    private PDO $dbConnection;
+
 
     public function __construct()
     {
-        try {
-            $this->dbConnection = databaseconnection::getInstance('db_ventas')->getConnection();
-            $this->ventaDAO = new VentaDAO($this->dbConnection);
-        } catch (Exception $e) {
-            throw new Exception("No se pudo establecer la conexión a la base de datos: " . $e->getMessage());
-        }
+        $this->ventaDAO = new VentaDAO();
     }
 
-    public function agregarVenta(Venta $venta): bool
+    public function agregarVenta($fecha, $cuit_cliente, $monto)
     {
-        try {
-            return $this->ventaDAO->agregarVenta($venta);
-        } catch (Exception $e) {
-            throw new Exception("Error al agregar venta: " . $e->getMessage());
+        if (empty($fecha) || empty($cuit_cliente) || !is_numeric($monto) || $monto <= 0) {
+            throw new Exception("Datos de venta inválidos.");
+        } else {
+            try {
+                return $this->ventaDAO->agregarVenta($fecha, $cuit_cliente, $monto);
+            } catch (Exception $e) {
+                throw new Exception("Error al agregar venta: " . $e->getMessage());
+            }
         }
     }
 
@@ -46,14 +42,6 @@ class VentaService implements IVentaService
         }
     }
 
-    public function actualizarVenta(Venta $venta): bool
-    {
-        try {
-            return $this->ventaDAO->actualizarVenta($venta);
-        } catch (Exception $e) {
-            throw new Exception("Error al actualizar la venta: " . $e->getMessage());
-        }
-    }
 
     public function eliminarVenta(int $id_venta): bool
     {
@@ -64,9 +52,3 @@ class VentaService implements IVentaService
         }
     }
 }
-
-
-
-
-
-

@@ -4,29 +4,35 @@
 namespace App\Service;
 
 require_once __DIR__ . '/../Dao/UsuarioDao.php';
-require_once __DIR__ . '/../Model/Usuario.php';
 require_once __DIR__ . '/../OtherService/PasswordHashService.php';
 
 use App\Dao\UsuarioDao;
 use App\Model\Usuario;
 use App\OtherService\PasswordHashService;
 
-class UsuarioService {
-    private UsuarioDao $dao;
+class UsuarioService
+{
+    private UsuarioDao $usuarioDao;
 
     private PasswordHashService $hashService;
 
-    public function __construct() {
-        $this->dao = new UsuarioDao();
+    public function __construct()
+    {
+        $this->usuarioDao = new UsuarioDao();
         $this->hashService = new PasswordHashService();
     }
 
-    public function registrarUsuario($nombreUsuario, $email, $contrasena, $rol) {
+    public function registrarUsuario($nombreUsuario, $email, $contrasena, $rol)
+    {
         $contrasena_hash = $this->hashService->hashPassword($contrasena);
-        $u = new Usuario(null ,$nombreUsuario, $email, $contrasena_hash, $rol);
+        $u = new Usuario(null, $nombreUsuario, $email, $contrasena_hash, $rol);
 
-        $this->dao->save($u);
+        $this->usuarioDao->save($u);
         echo 'Usuario registrado';
     }
 
+    public function findByUsername($nombreUsuario)
+    {
+        return $this->usuarioDao->findByUsername($nombreUsuario);
+    }
 }

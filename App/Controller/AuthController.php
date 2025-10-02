@@ -4,24 +4,29 @@ namespace App\Controller;
 
 include_once __DIR__ . '/../OtherService/PasswordHashService.php';
 include_once __DIR__ . '/../OtherService/TokenService.php';
-include_once __DIR__ . '/../Dao/UsuarioDao.php';
 
+include_once __DIR__ . '/../Service/UsuarioService.php';
+
+use App\Model\Usuario;
 use App\OtherService\TokenService;
 use App\OtherService\PasswordHashService;
-use App\Dao\UsuarioDao;
+use App\Service\UsuarioService;
 
-class AuthController {
-    private UsuarioDao $dao;
+class AuthController
+{
+    private UsuarioService $usuarioService;
 
-    public function __construct() {
-        $this->dao = new UsuarioDao();
+    public function __construct()
+    {
+        $this->usuarioService = new UsuarioService();
     }
 
-    public function login($nombreUsuario, $contrasena) {
-        $u = $this->dao->findByUsername($nombreUsuario);
+    public function login($nombreUsuario, $contrasena)
+    {
+        $u = $this->usuarioService->findByUsername($nombreUsuario);
 
-        if($u != null) {
-            if(PasswordHashService::verifyPassword($contrasena, $u->getContrasena())) {
+        if ($u != null) {
+            if (PasswordHashService::verifyPassword($contrasena, $u->getContrasena())) {
                 $token = TokenService::generateToken($u);
 
                 $_SESSION['token'] = $token;
@@ -33,5 +38,4 @@ class AuthController {
             }
         }
     }
-
 }

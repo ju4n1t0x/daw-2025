@@ -5,12 +5,14 @@ namespace core;
 use PDO;
 use PDOException;
 
-class DatabaseConnection {
+class DatabaseConnection
+{
     private static $instance = null;
     private $pdo;
 
-    private function __construct() {
-        $host = 'mysql:host=localhost;dbname=tpdaw;';
+    private function __construct()
+    {
+        $host = 'mysql:host=localhost;dbname=TpDaw;';
         $username = 'root';
         $pass = '';
 
@@ -23,22 +25,16 @@ class DatabaseConnection {
         }
     }
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance === null) {
             self::$instance = new DatabaseConnection();
         }
         return self::$instance;
     }
 
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->pdo;
-    }
-
-    public function __clone() {
-
-    }
-
-    public function __wakeup(){
-
     }
 }
