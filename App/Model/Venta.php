@@ -9,6 +9,7 @@ class Venta implements \JsonSerializable
     private string $cuit_cliente; // Corregido de ?int a string
     private float $monto;
 
+
     public function __construct(?int $id_venta, string $fecha, string $cuit_cliente, float $monto)
     {
         $this->id_venta = $id_venta;

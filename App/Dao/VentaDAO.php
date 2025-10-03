@@ -18,14 +18,14 @@ class VentaDAO
         $this->conn = DatabaseConnection::getInstance()->getConnection();
     }
 
-    public function agregarVenta($fecha, $cuit_cliente, $monto): bool
+    public function agregarVenta(Venta $ventaModel): bool
     {
         $sql = "INSERT INTO ventas (fecha, cuit_cliente, monto) VALUES (:fecha, :cuit_cliente, :monto)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
-            'fecha' => $fecha,
-            'cuit_cliente' => $cuit_cliente,
-            'monto' => $monto
+            'fecha' => $ventaModel->getFecha(),
+            'cuit_cliente' => $ventaModel->getCuitCliente(),
+            'monto' => $ventaModel->getMonto()
         ]);
     }
 
@@ -51,5 +51,22 @@ class VentaDAO
         $sql = "DELETE FROM ventas WHERE id_venta = :id_venta";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute(['id_venta' => $id_venta]);
+    }
+
+    public function obtenerVentaPorId(int $id_venta): ?Venta
+    {
+        $sql = "SELECT * FROM ventas WHERE id_venta = :id_venta";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['id_venta' => $id_venta]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Venta(
+                $row['id_venta'],
+                $row['fecha'],
+                $row['cuit_cliente'],
+                $row['monto']
+            );
+        }
+        return null;
     }
 }

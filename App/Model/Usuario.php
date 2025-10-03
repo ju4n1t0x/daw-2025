@@ -40,9 +40,9 @@ class Usuario implements \JsonSerializable
         return $this->contrasena;
     }
 
-    public function getRole()
+    public function getRol()
     {
-        return $this->role;
+        return $this->rol;
     }
 
     public function setNombreUsuario($nombreUsuario)

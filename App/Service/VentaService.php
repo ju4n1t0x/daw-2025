@@ -5,14 +5,18 @@ namespace App\Service;
 require_once __DIR__ . '/IVentaService.php';
 require_once __DIR__ . '/../Dao/VentaDAO.php';
 require_once __DIR__ . '/../../core/Databaseconnection.php';
+require_once __DIR__ . '/../Model/Venta.php';
 
 
 use App\Dao\VentaDAO;
 use Exception;
+use App\Model\Venta;
 
-class VentaService implements IVentaService
+
+class VentaService
 {
     private VentaDAO $ventaDAO;
+    private Venta $ventaModel;
 
 
     public function __construct()
@@ -26,7 +30,8 @@ class VentaService implements IVentaService
             throw new Exception("Datos de venta inválidos.");
         } else {
             try {
-                return $this->ventaDAO->agregarVenta($fecha, $cuit_cliente, $monto);
+                $ventaModel = new Venta(null, $fecha, $cuit_cliente, $monto);
+                return $this->ventaDAO->agregarVenta($ventaModel);
             } catch (Exception $e) {
                 throw new Exception("Error al agregar venta: " . $e->getMessage());
             }
@@ -45,10 +50,15 @@ class VentaService implements IVentaService
 
     public function eliminarVenta(int $id_venta): bool
     {
-        try {
-            return $this->ventaDAO->eliminarVenta($id_venta);
-        } catch (Exception $e) {
-            throw new Exception("Error al eliminar la venta: " . $e->getMessage());
+        $buscarVenta = $this->ventaDAO->obtenerVentaPorId($id_venta);
+        if ($buscarVenta !== null) {
+            try {
+                return $this->ventaDAO->eliminarVenta($id_venta);
+            } catch (Exception $e) {
+                throw new Exception("La venta no pudo eliminarse correctamente " . $e->getMessage());
+            }
+        } else {
+            throw new Exception("La venta con ID " . $id_venta . " no existe.");
         }
     }
 }
