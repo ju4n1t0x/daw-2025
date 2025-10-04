@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-require_once __DIR__ . '/IVentaService.php';
+
 require_once __DIR__ . '/../Dao/VentaDAO.php';
 require_once __DIR__ . '/../../core/Databaseconnection.php';
 require_once __DIR__ . '/../Model/Venta.php';
@@ -16,7 +16,7 @@ use App\Model\Venta;
 class VentaService
 {
     private VentaDAO $ventaDAO;
-    private Venta $ventaModel;
+
 
 
     public function __construct()

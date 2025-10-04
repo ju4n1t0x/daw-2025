@@ -19,7 +19,7 @@ class UsuarioController
     {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
-
+        echo $data;
         if (!$data || !isset($data['nombreUsuario']) || !isset($data['email']) || !isset($data['contrasena'])) {
             header('Content-Type: application/json');
             http_response_code(400);

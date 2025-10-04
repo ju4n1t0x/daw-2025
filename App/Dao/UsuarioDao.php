@@ -26,7 +26,7 @@ class UsuarioDao
             ':nombreUsuario' => $u->getNombreUsuario(),
             ':email' => $u->getEmail(),
             ':contrasena' => $u->getContrasena(),
-            ':role' => $u->getRole()
+            ':role' => $u->getRol()
         ]);
 
         return $this->pdo->lastInsertId();
@@ -41,7 +41,7 @@ class UsuarioDao
             ':nombreUsuario' => $u->getNombreUsuario(),
             ':email' => $u->getEmail(),
             ':contrasena' => $u->getContrasena(),
-            ':role' => $u->getRole()
+            ':role' => $u->getRol()
         ]);
     }
 

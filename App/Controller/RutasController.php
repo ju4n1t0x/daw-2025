@@ -20,6 +20,7 @@ class RutasController
     private AuthController $authController;
     private UsuarioController $usuarioController;
 
+
     public function __construct()
     {
         $this->procesarVentas = new ProcesarVentas();
@@ -32,16 +33,17 @@ class RutasController
         session_start();
 
         $procesarVentas = $this->procesarVentas;
+        $usuarioController = $this->usuarioController;
+        $authController = $this->authController;
+
 
         Route::get('/', function () {
             echo "Home Page";
         });
-        Route::get('/login', function () {
-            echo "Login Page";
+        Route::get('/login', function () use ($authController) {
+            $authController->login();
         });
-        Route::post('/login', function ($usuarioController) {
-            $usuarioController->registrarUsuario();
-        });
+
         Route::get('/ventas', function () use ($procesarVentas) {
             $procesarVentas->listarVentas();
         });
@@ -54,8 +56,8 @@ class RutasController
         Route::get('/users', function () {
             echo "Users Page";
         });
-        Route::post('/users', function () {
-            echo "Users Post";
+        Route::post('/users', function () use ($usuarioController) {
+            $usuarioController->registrarUsuario();
         });
         Route::put('/users', function () {
             echo "Users Put";

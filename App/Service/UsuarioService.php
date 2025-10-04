@@ -4,11 +4,11 @@
 namespace App\Service;
 
 require_once __DIR__ . '/../Dao/UsuarioDao.php';
-require_once __DIR__ . '/../OtherService/PasswordHashService.php';
+require_once __DIR__ . '/PasswordHashService.php';
 
 use App\Dao\UsuarioDao;
 use App\Model\Usuario;
-use App\OtherService\PasswordHashService;
+use App\Service\PasswordHashService;
 
 class UsuarioService
 {

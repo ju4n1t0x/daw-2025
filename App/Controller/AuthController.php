@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
-include_once __DIR__ . '/../OtherService/PasswordHashService.php';
-include_once __DIR__ . '/../OtherService/TokenService.php';
+include_once __DIR__ . '/../Service/PasswordHashService.php';
+include_once __DIR__ . '/../Service/TokenService.php';
 
 include_once __DIR__ . '/../Service/UsuarioService.php';
 
-use App\Model\Usuario;
-use App\OtherService\TokenService;
-use App\OtherService\PasswordHashService;
+
+use App\Service\TokenService;
+use App\Service\PasswordHashService;
 use App\Service\UsuarioService;
 
 class AuthController
@@ -21,20 +21,51 @@ class AuthController
         $this->usuarioService = new UsuarioService();
     }
 
-    public function login($nombreUsuario, $contrasena)
+    public function login()
     {
-        $u = $this->usuarioService->findByUsername($nombreUsuario);
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
 
-        if ($u != null) {
-            if (PasswordHashService::verifyPassword($contrasena, $u->getContrasena())) {
-                $token = TokenService::generateToken($u);
+        $nombreUsuario = $data['nombreUsuario'];
+        $contrasena = $data['contrasena'];
+        session_start();
 
-                $_SESSION['token'] = $token;
+        $usuario = $this->usuarioService->findByUsername($nombreUsuario);
 
-                header("Location: Views/welcome.php");
-                exit();
+        if ($usuario != null) {
+            if (PasswordHashService::verifyPassword($contrasena, $usuario->getContrasena())) {
+                try {
+
+                    $token = TokenService::generateToken($usuario);
+
+                    $_SESSION['token'] = $token;
+                    $_SESSION['usuario'] = $usuario->getNombreUsuario();
+
+                    header('Content-Type: application/json');
+                    http_response_code(300);
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Inicio de sesión exitoso',
+                        'token' => $token
+                    ]);
+                    return;
+                } catch (\Exception $e) {
+                    header('Content-Type: application/json');
+                    http_response_code(200);
+                    echo json_encode([
+                        'error' => $e->getMessage(),
+                        'message' => 'Error al generar el token'
+                    ]);
+                    return;
+                }
             } else {
-                header("Location: Views/login.php");
+                header('Content-Type: application/json');
+                http_response_code(401);
+                echo json_encode([
+                    'error' => true,
+                    'message' => 'Credenciales inválidas'
+                ]);
+                return;
             }
         }
     }
