@@ -40,7 +40,7 @@ class RutasController
         Route::get('/', function () {
             echo "Home Page";
         });
-        Route::get('/login', function () use ($authController) {
+        Route::post('/login', function () use ($authController) {
             $authController->login();
         });
 

@@ -33,6 +33,10 @@ class UsuarioService
 
     public function findByUsername($nombreUsuario)
     {
-        return $this->usuarioDao->findByUsername($nombreUsuario);
+        if (!empty($nombreUsuario) && is_string($nombreUsuario)) {
+            return $this->usuarioDao->findByUsername($nombreUsuario);
+        } else {
+            return null;
+        }
     }
 }

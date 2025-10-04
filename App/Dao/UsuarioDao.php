@@ -32,21 +32,10 @@ class UsuarioDao
         return $this->pdo->lastInsertId();
     }
 
-    public function update(Usuario $u)
-    {
-        $stmt = $this->pdo->prepare('UPDATE usuarios SET nombre_usuario = :nombreUsuario, email = :email, contrasena = :contrasena, rol = :role WHERE id = :id');
-
-        $stmt->execute([
-            ':id' => $u->getId(),
-            ':nombreUsuario' => $u->getNombreUsuario(),
-            ':email' => $u->getEmail(),
-            ':contrasena' => $u->getContrasena(),
-            ':role' => $u->getRol()
-        ]);
-    }
 
     public function findByUsername($nombreUsuario): ?Usuario
     {
+
         $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE nombre_usuario = :nombreUsuario LIMIT 1');
 
         $stmt->execute([
