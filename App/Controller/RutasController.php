@@ -45,9 +45,11 @@ class RutasController
         });
 
         Route::get('/ventas', function () use ($procesarVentas) {
+            AuthController::validarToken();
             $procesarVentas->listarVentas();
         });
         Route::post('/ventas', function () use ($procesarVentas) {
+            AuthController::validarToken();
             $procesarVentas->agregarVenta();
         });
         Route::delete('/ventas', function () use ($procesarVentas) {
