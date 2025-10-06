@@ -1,13 +1,12 @@
-import './styles/home.css'
-import SignIn from '../components/sign-in-components/SignIn.jsx'
-
+import "./styles/home.css";
+import SignIn from "../components/sign-in-components/SignIn.jsx";
 
 export default function SignInPage() {
   return (
     <>
-    <section id="section-main">
-    <SignIn/>
-    </section>
+      <section id="section-login">
+        <SignIn />
+      </section>
     </>
-  )
+  );
 }

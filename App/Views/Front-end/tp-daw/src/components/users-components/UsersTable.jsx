@@ -1,111 +1,62 @@
-import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { TableVirtuoso } from 'react-virtuoso';
-import Chance from 'chance';
+import * as React from "react";
+import Paper from "@mui/material/Paper";
+import { DataGrid } from "@mui/x-data-grid";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
-const chance = new Chance(42);
+export default function VentasList() {
+  const [data, setData] = React.useState([]);
+  const location = useLocation();
 
-function createData(id) {
-  return {
-    id,
-    firstName: chance.first(),
-    lastName: chance.last(),
-    age: chance.age(),
-    phone: chance.phone(),
-    state: chance.state({ full: true }),
+  const fetchData = () => {
+    axios
+      .get("http://localhost/daw2025/TP/Public/usuarios")
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+      });
   };
-}
+  React.useEffect(() => {
+    fetchData();
+  }, [location.state?.refresh]);
 
-const columns = [
-  {
-    width: 100,
-    label: 'First Name',
-    dataKey: 'firstName',
-  },
-  {
-    width: 100,
-    label: 'Last Name',
-    dataKey: 'lastName',
-  },
-  {
-    width: 50,
-    label: 'Age',
-    dataKey: 'age',
-    numeric: true,
-  },
-  {
-    width: 110,
-    label: 'State',
-    dataKey: 'state',
-  },
-  {
-    width: 130,
-    label: 'Phone Number',
-    dataKey: 'phone',
-  },
-];
+  const columns = [
+    { field: "id", headerName: "ID", width: 130 },
+    { field: "nombre_usuario", headerName: "Nombre de Usuario", width: 200 },
+    { field: "email", headerName: "Email", width: 200 },
+    {
+      field: "contrasena",
+      headerName: "Contraseña",
+      type: "contraseña",
+      width: 200,
+    },
+    { field: "rol", headerName: "Rol", type: "Rol", width: 200 },
+  ];
 
-const rows = Array.from({ length: 200 }, (_, index) => createData(index));
+  const rows = data.map((item) => ({
+    id: item.id,
+    nombre_usuario: item.nombre_usuario,
+    email: item.email,
+    contrasena: item.contrasena,
+    rol: item.rol,
+  }));
 
-const VirtuosoTableComponents = {
-  Scroller: React.forwardRef((props, ref) => (
-    <TableContainer component={Paper} {...props} ref={ref} />
-  )),
-  Table: (props) => (
-    <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />
-  ),
-  TableHead: React.forwardRef((props, ref) => <TableHead {...props} ref={ref} />),
-  TableRow,
-  TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
-};
-
-function fixedHeaderContent() {
+  const paginationModel = { page: 0, pageSize: 5 };
   return (
-    <TableRow>
-      {columns.map((column) => (
-        <TableCell
-          key={column.dataKey}
-          variant="head"
-          align={column.numeric || false ? 'right' : 'left'}
-          style={{ width: column.width }}
-          sx={{ backgroundColor: 'background.paper' }}
-        >
-          {column.label}
-        </TableCell>
-      ))}
-    </TableRow>
-  );
-}
-
-function rowContent(_index, row) {
-  return (
-    <React.Fragment>
-      {columns.map((column) => (
-        <TableCell
-          key={column.dataKey}
-          align={column.numeric || false ? 'right' : 'left'}
-        >
-          {row[column.dataKey]}
-        </TableCell>
-      ))}
-    </React.Fragment>
-  );
-}
-
-export default function UsersTable() {
-  return (
-    <Paper style={{ height: 400, width: '100%' }}>
-      <TableVirtuoso
-        data={rows}
-        components={VirtuosoTableComponents}
-        fixedHeaderContent={fixedHeaderContent}
-        itemContent={rowContent}
+    <Paper
+      sx={{
+        height: 400,
+        width: "80%",
+      }}
+    >
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
       />
     </Paper>
   );

@@ -31,7 +31,7 @@ class VentaDAO
 
     public function obtenerTodasLasVentas(): array
     {
-        $sql = "SELECT * FROM ventas ORDER BY fecha DESC";
+        $sql = "SELECT * FROM ventas ORDER BY id_venta ASC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $ventas = [];

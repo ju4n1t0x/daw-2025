@@ -53,14 +53,11 @@ class RutasController
         Route::delete('/ventas', function () use ($procesarVentas) {
             $procesarVentas->eliminarVenta();
         });
-        Route::get('/users', function () {
-            echo "Users Page";
+        Route::get('/usuarios', function () use ($usuarioController) {
+            $usuarioController->listarUsuarios();
         });
-        Route::post('/users', function () use ($usuarioController) {
+        Route::post('/usuarios', function () use ($usuarioController) {
             $usuarioController->registrarUsuario();
-        });
-        Route::put('/users', function () {
-            echo "Users Put";
         });
 
         Route::dispatch();

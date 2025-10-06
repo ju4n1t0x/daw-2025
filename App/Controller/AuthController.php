@@ -26,15 +26,15 @@ class AuthController
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
-        if (!isset($data['nombreUsuario']) || !isset($data['contrasena'])) {
-            $this->enviarError(400, 'Faltan credenciales: nombreUsuario y contrasena son requeridos');
+        if (!isset($data['nombre_usuario']) || !isset($data['contrasena'])) {
+            $this->enviarError(400, 'Faltan credenciales: nombre_usuario y contrasena son requeridos');
             return;
         }
-        $nombreUsuario = $data['nombreUsuario'];
+        $nombre_usuario = $data['nombre_usuario'];
         $contrasena = $data['contrasena'];
         session_start();
 
-        $usuario = $this->usuarioService->findByUsername($nombreUsuario);
+        $usuario = $this->usuarioService->findByUsername($nombre_usuario);
 
         if ($usuario != null) {
             if (PasswordHashService::verifyPassword($contrasena, $usuario->getContrasena())) {
@@ -45,12 +45,19 @@ class AuthController
                     $_SESSION['token'] = $token;
                     $_SESSION['usuario'] = $usuario->getNombreUsuario();
 
+                    setcookie('auth_token', $token, [
+                        'expires' => time() + 3600, // 1 hora
+                        'path' => '/',
+                        'httponly' => true, // Solo accesible vía HTTP (no JavaScript)
+                        'samesite' => 'Lax' // Protección CSRF básica
+                    ]);
+
                     $this->enviarExito(200, [
                         'success' => true,
                         'message' => 'Login exitoso',
                         'token' => $token,
                         'usuario' => $usuario->getNombreUsuario(),
-                        'role' => $usuario->getRol()
+                        'rol' => $usuario->getRol()
                     ]);
                     return;
                 } catch (\Exception $e) {
@@ -68,6 +75,26 @@ class AuthController
         }
     }
 
+    public static function validarToken()
+    {
+        // Leer el token desde la cookie
+        if (!isset($_COOKIE['auth_token'])) {
+            http_response_code(401);
+            echo json_encode(['error' => 'No autorizado - Token no encontrado']);
+            exit;
+        }
+
+        $token = $_COOKIE['auth_token'];
+        $decoded = TokenService::validateToken($token);
+
+        if (!$decoded) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Token inválido o expirado']);
+            exit;
+        }
+
+        return $decoded;
+    }
     private function enviarExito($code, $data)
     {
         header('Content-Type: application/json');

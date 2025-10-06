@@ -3,27 +3,36 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
-import axios from "../../utils/axiosConfig";
+import axios from "axios";
 import { useState } from "react";
 
 function FormSignIn() {
   const [values, setValues] = useState({
-    nombre_usuario: "",
-    contrasena: "",
+    fecha: "",
+    cuit_cliente: "",
+    monto: "",
   });
 
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!values.fecha || !values.cuit_cliente || !values.monto) {
+      alert("Por favor, completa todos los campos");
+      return;
+    }
     axios
-      .post("/login", {
-        nombre_usuario: values.nombre_usuario,
-        contrasena: values.contrasena,
+      .post("http://localhost/daw2025/TP/Public/ventas", {
+        fecha: values.fecha,
+        cuit_cliente: values.cuit_cliente,
+        monto: values.monto,
       })
       .then((response) => {
         console.log(response);
-        navigate("/home");
+        alert("Venta agregada con éxito");
+        navigate("/home/ventas", {
+          state: { refresh: Date.now() },
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -39,37 +48,43 @@ function FormSignIn() {
           display: "flex",
           flexDirection: "column",
           alignItems: "start",
-          justifyContent: "center",
           padding: 4,
           gap: 1,
         }}
         noValidate
         autoComplete="off"
       >
-        <h4>Nombre de Usuario</h4>
+        <h4>Fecha de Venta</h4>
         <TextField
           required
           id="outlined-required"
-          name="nombre_usuario"
-          label="Required"
-          value={values.nombre_usuario}
-          onChange={(e) =>
-            setValues({ ...values, nombre_usuario: e.target.value })
-          }
-          sx={{ minWidth: "60ch" }}
+          name="Fecha de Venta"
+          type="date"
+          value={values.fecha}
+          onChange={(e) => setValues({ ...values, fecha: e.target.value })}
+          sx={{ minWidth: "100ch" }}
         />
-        <h4>Contraseña</h4>
+        <h4>Cuit de Cliente</h4>
         <TextField
           required
-          id="outlined-password-input"
-          name="contrasena"
-          type="password"
-          label="Contraseña"
-          autoComplete="current-password"
-          variant="filled"
-          value={values.contrasena}
-          onChange={(e) => setValues({ ...values, contrasena: e.target.value })}
-          sx={{ minWidth: "60ch" }}
+          id="outlined-required"
+          name="Cuit de Cliente"
+          label="Required"
+          value={values.cuit_cliente}
+          onChange={(e) =>
+            setValues({ ...values, cuit_cliente: e.target.value })
+          }
+          sx={{ minWidth: "100ch" }}
+        />
+        <h4>Importe</h4>
+        <TextField
+          required
+          id="outlined-required"
+          name="Importe"
+          label="Required"
+          value={values.monto}
+          onChange={(e) => setValues({ ...values, monto: e.target.value })}
+          sx={{ minWidth: "100ch" }}
         />
 
         <Button
@@ -79,12 +94,12 @@ function FormSignIn() {
           sx={{
             padding: 1,
             marginTop: 2,
-            width: "60ch",
-            alignSelf: "center",
+            width: "100ch",
+            alignSelf: "start",
             gap: 2,
           }}
         >
-          Ingresar
+          Agregar Venta
         </Button>
       </Box>
     </>

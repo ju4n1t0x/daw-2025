@@ -22,21 +22,29 @@ class UsuarioService
         $this->hashService = new PasswordHashService();
     }
 
-    public function registrarUsuario($nombreUsuario, $email, $contrasena, $rol)
+    public function registrarUsuario($nombre_usuario, $email, $contrasena, $rol)
     {
         $contrasena_hash = $this->hashService->hashPassword($contrasena);
-        $u = new Usuario(null, $nombreUsuario, $email, $contrasena_hash, $rol);
+        $u = new Usuario(null, $nombre_usuario, $email, $contrasena_hash, $rol);
 
         $this->usuarioDao->save($u);
         echo 'Usuario registrado';
     }
 
-    public function findByUsername($nombreUsuario)
+    public function findByUsername($nombre_usuario)
     {
-        if (!empty($nombreUsuario) && is_string($nombreUsuario)) {
-            return $this->usuarioDao->findByUsername($nombreUsuario);
+        if (!empty($nombre_usuario) && is_string($nombre_usuario)) {
+            return $this->usuarioDao->findByUsername($nombre_usuario);
         } else {
             return null;
+        }
+    }
+    public function obtenerTodosLosUsuarios()
+    {
+        try {
+            return $this->usuarioDao->obtenerTodosLosUsuarios();
+        } catch (\Exception $e) {
+            throw new \Exception("No se pudieron obtener los usuarios: " . $e->getMessage());
         }
     }
 }

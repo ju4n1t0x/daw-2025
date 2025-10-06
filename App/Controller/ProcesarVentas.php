@@ -83,8 +83,17 @@ class ProcesarVentas
         try {
             $ventas = $this->ventaService->obtenerTodasLasVentas();
 
+            $ventasArray = array_map(function ($venta) {
+                return [
+                    'id_venta' => $venta->getIdVenta(),
+                    'fecha' => date('d/m/Y', strtotime($venta->getFecha())),
+                    'cuit_cliente' => $venta->getCuitCliente(),
+                    'monto' => $venta->getMonto()
+                ];
+            }, $ventas);
+
             header('Content-Type: application/json');
-            echo json_encode($ventas);
+            echo json_encode($ventasArray);
         } catch (\Exception $e) {
             header('Content-Type: application/json');
             http_response_code(500);
@@ -97,7 +106,7 @@ class ProcesarVentas
 
     public function eliminarVenta()
     {
-        error_log("=== INICIO eliminarVenta ===");
+
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 

@@ -20,26 +20,26 @@ class UsuarioDao
 
     public function save(Usuario $u)
     {
-        $stmt = $this->pdo->prepare('INSERT INTO usuarios (nombre_usuario, email, contrasena, role) VALUES (:nombreUsuario, :email, :contrasena, :role)');
+        $stmt = $this->pdo->prepare('INSERT INTO usuarios (nombre_usuario, email, contrasena, rol) VALUES (:nombre_usuario, :email, :contrasena, :rol)');
 
         $stmt->execute([
-            ':nombreUsuario' => $u->getNombreUsuario(),
+            ':nombre_usuario' => $u->getNombreUsuario(),
             ':email' => $u->getEmail(),
             ':contrasena' => $u->getContrasena(),
-            ':role' => $u->getRol()
+            ':rol' => $u->getRol()
         ]);
 
         return $this->pdo->lastInsertId();
     }
 
 
-    public function findByUsername($nombreUsuario): ?Usuario
+    public function findByUsername($nombre_usuario): ?Usuario
     {
 
-        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE nombre_usuario = :nombreUsuario LIMIT 1');
+        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE nombre_usuario = :nombre_usuario LIMIT 1');
 
         $stmt->execute([
-            ':nombreUsuario' => $nombreUsuario,
+            ':nombre_usuario' => $nombre_usuario,
         ]);
 
         $f = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -48,6 +48,23 @@ class UsuarioDao
             return null;
         }
 
-        return new Usuario($f['id'], $f['nombre_usuario'], $f['email'], $f['contrasena'], $f['role']);
+        return new Usuario($f['id'], $f['nombre_usuario'], $f['email'], $f['contrasena'], $f['rol']);
+    }
+
+    public function obtenerTodosLosUsuarios(): array
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM usuarios ORDER BY id ASC');
+        $stmt->execute();
+        $usuarios = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $usuarios[] = new Usuario(
+                $row['id'],
+                $row['nombre_usuario'],
+                $row['email'],
+                $row['contrasena'],
+                $row['rol']
+            );
+        }
+        return $usuarios;
     }
 }

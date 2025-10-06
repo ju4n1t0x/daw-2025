@@ -1,44 +1,50 @@
-import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import Paper from '@mui/material/Paper';
-
-const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 90,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-  },
-];
-
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
-
-const paginationModel = { page: 0, pageSize: 5 };
+import * as React from "react";
+import Paper from "@mui/material/Paper";
+import { DataGrid } from "@mui/x-data-grid";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 export default function VentasList() {
+  const [data, setData] = React.useState([]);
+  const location = useLocation();
+
+  const fetchData = () => {
+    axios
+      .get("http://localhost/daw2025/TP/Public/ventas")
+      .then((response) => {
+        console.log("Datos del backend:", response.data);
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error en traer los datos desde la api:", error);
+      });
+  };
+  React.useEffect(() => {
+    fetchData();
+  }, [location.state?.refresh]);
+
+  const columns = [
+    { field: "id", headerName: "ID", width: 130 },
+    { field: "fecha", headerName: "Fecha", width: 200 },
+    { field: "cuit_cliente", headerName: "CUIT Cliente", width: 200 },
+    { field: "monto", headerName: "Importe", type: "number", width: 200 },
+  ];
+
+  const rows = data.map((item) => ({
+    id: item.id_venta,
+    fecha: item.fecha,
+    cuit_cliente: item.cuit_cliente,
+    monto: item.monto,
+  }));
+
+  const paginationModel = { page: 0, pageSize: 5 };
   return (
-    <Paper sx={{ height: 400, width: '100%' }}>
+    <Paper
+      sx={{
+        height: 400,
+        width: "80%",
+      }}
+    >
       <DataGrid
         rows={rows}
         columns={columns}

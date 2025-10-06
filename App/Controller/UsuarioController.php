@@ -20,15 +20,40 @@ class UsuarioController
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         echo $data;
-        if (!$data || !isset($data['nombreUsuario']) || !isset($data['email']) || !isset($data['contrasena'])) {
+        if (!$data || !isset($data['nombre_usuario']) || !isset($data['email']) || !isset($data['contrasena'])) {
             header('Content-Type: application/json');
             http_response_code(400);
             echo json_encode([
                 'error' => true,
-                'message' => 'Datos incompletos. Se requieren: nombreUsuario, email y contrasena'
+                'message' => 'Datos incompletos. Se requieren: nombre_usuario, email y contrasena'
             ]);
             return;
         }
-        $this->usuarioService->registrarUsuario($data['nombreUsuario'], $data['email'], $data['contrasena'], $data['rol']);
+        $this->usuarioService->registrarUsuario($data['nombre_usuario'], $data['email'], $data['contrasena'], $data['rol']);
+    }
+
+    public function listarUsuarios()
+    {
+        try {
+            $usuarios = $this->usuarioService->obtenerTodosLosUsuarios();
+            $usuariosArray = array_map(function ($usuario) {
+                return [
+                    'id' => $usuario->getId(),
+                    'nombre_usuario' => $usuario->getNombreUsuario(),
+                    'email' => $usuario->getEmail(),
+                    'contrasena' => $usuario->getContrasena(),
+                    'rol' => $usuario->getRol()
+                ];
+            }, $usuarios);
+            header('Content-Type: application/json');
+            echo json_encode($usuariosArray);
+        } catch (\Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(500);
+            echo json_encode([
+                'error' => true,
+                'message' => 'Error al listar usuarios: ' . $e->getMessage()
+            ]);
+        }
     }
 }
