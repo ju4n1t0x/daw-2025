@@ -24,11 +24,18 @@ class UsuarioService
 
     public function registrarUsuario($nombre_usuario, $email, $contrasena, $rol)
     {
-        $contrasena_hash = $this->hashService->hashPassword($contrasena);
-        $u = new Usuario(null, $nombre_usuario, $email, $contrasena_hash, $rol);
-
-        $this->usuarioDao->save($u);
-        echo 'Usuario registrado';
+        if ($this->usuarioDao->findByUsername($nombre_usuario)) {
+            echo "El nombre de usuario ya existe.";
+        } else {
+            try {
+                $contrasena_hash = $this->hashService->hashPassword($contrasena);
+                $u = new Usuario(null, $nombre_usuario, $email, $contrasena_hash, $rol);
+                $this->usuarioDao->save($u);
+                echo 'Usuario registrado';
+            } catch (\Exception $e) {
+                throw new \Exception("Error al registrar usuario: " . $e->getMessage());
+            }
+        }
     }
 
     public function findByUsername($nombre_usuario)

@@ -33,7 +33,7 @@ class Route
     public static function dispatch()
     {
         $uri = $_SERVER['REQUEST_URI'];
-        $basePath = '/daw-2025-main/Public';
+        $basePath = '/daw2025/TP/Public';
         $uri = str_replace($basePath, '', $uri);
 
         // Separar la URI de los parámetros de query string

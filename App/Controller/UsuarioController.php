@@ -19,13 +19,13 @@ class UsuarioController
     {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
-        echo $data;
-        if (!$data || !isset($data['nombre_usuario']) || !isset($data['email']) || !isset($data['contrasena'])) {
+
+        if (!$data || !isset($data['nombre_usuario']) || !isset($data['email']) || !isset($data['contrasena']) || !isset($data['rol'])) {
             header('Content-Type: application/json');
             http_response_code(400);
             echo json_encode([
                 'error' => true,
-                'message' => 'Datos incompletos. Se requieren: nombre_usuario, email y contrasena'
+                'message' => 'Datos incompletos. Se requieren: nombre_usuario, email, contrasena y rol'
             ]);
             return;
         }
