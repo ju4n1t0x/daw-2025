@@ -79,6 +79,7 @@ function FormSignIn() {
           id="outlined-required"
           name="Email"
           label="Required"
+          type="password"
           value={values.email}
           onChange={(e) => setValues({ ...values, email: e.target.value })}
           sx={{ minWidth: "100ch" }}
